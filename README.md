@@ -9,7 +9,7 @@
 
 This library can only be installed via GIT as of now
 ```bash
-haxelib git flxsvg https://github.com/Vortex2Obliviob/flxsvg
+haxelib git flxsvg https://github.com/Vortex2Oblivion/flxsvg
 ```
 
 ### Usage
