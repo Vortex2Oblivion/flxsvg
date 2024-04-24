@@ -30,7 +30,6 @@ class PlayState extends FlxState
 	{
 		super.create();
 		svg = new FlxSvgSprite(Assets.getText("assets/images/haxe.svg"));
-		svg.screenCenter();
 		add(svg);
 	}
 }

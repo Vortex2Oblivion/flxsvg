@@ -18,6 +18,12 @@ class FlxSvgSprite extends FlxSprite{
 
     public var data:String;
 
+    /**
+     * Creats a new ```FlxSvgSprite```
+     * @param data The SVG data as a string.
+     * @param X The X position.
+     * @param Y The Y position.
+     */
     public function new(data:String, X:Float = 0, Y:Float = 0){
         super(X,Y);
         this.data = data;
