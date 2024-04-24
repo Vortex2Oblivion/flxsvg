@@ -1,6 +1,6 @@
 # flxsvg
 
-![](https://img.shields.io/github/repo-size/Vortex2Oblivion/svg) ![](https://badgen.net/github/open-issues/Vortex2Oblivion/svg) ![](https://badgen.net/badge/license/MIT/green)
+![](https://img.shields.io/github/repo-size/Vortex2Oblivion/flxsvg) ![](https://badgen.net/github/open-issues/Vortex2Oblivion/flxsvg) ![](https://badgen.net/badge/license/MIT/green)
 
 [OpenFL SVG Render](https://github.com/openfl/svg/) support for HaxeFlixel.
 
