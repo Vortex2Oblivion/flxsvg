@@ -15,7 +15,7 @@ haxelib git flxsvg https://github.com/Vortex2Oblivion/flxsvg
 ### ⚠️ Warning!
 
 Currently, svgs do not maintain their resolution when scaling.
-Your image will become lower quality as if it is a png file.
+Your image will become lower quality as if it is a png file if you attempt to resize it.
 
 ### Usage
 
