@@ -12,6 +12,10 @@ This library can only be installed via GIT as of now
 haxelib git flxsvg https://github.com/Vortex2Oblivion/flxsvg
 ```
 
+### ⚠️ Warning!
+
+Currently, svgs do not maintain their resolution when scaling properly.
+
 ### Usage
 
 ```haxe
