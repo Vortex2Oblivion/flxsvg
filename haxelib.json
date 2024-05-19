@@ -16,7 +16,6 @@
 	],
 	"classPath": "src",
 	"dependencies": {
-		"svg": "",
-		"flixel": ""
+		"svg": ""
 	}
 }

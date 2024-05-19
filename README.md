@@ -6,8 +6,12 @@
 
 ### Installation
 
+Via haxelib:
+```bash
+haxelib install flxsvg
+```
 
-This library can only be installed via GIT as of now
+Via git for the latest updates:
 ```bash
 haxelib git flxsvg https://github.com/Vortex2Oblivion/flxsvg
 ```
