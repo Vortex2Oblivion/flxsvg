@@ -16,11 +16,6 @@ Via git for the latest updates:
 haxelib git flxsvg https://github.com/Vortex2Oblivion/flxsvg
 ```
 
-### ⚠️ Warning!
-
-Currently, svgs do not maintain their resolution when scaling.
-Your image will become lower quality as if it is a png file if you attempt to resize it.
-
 ### Usage
 
 ```haxe
@@ -38,7 +33,7 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		super.create();
-		svg = new FlxSvgSprite(Assets.getText("assets/images/haxe.svg"));
+		svg = new FlxSvgSprite(Assets.getText("assets/images/HaxeFlixel.svg"));
 		add(svg);
 	}
 }
