@@ -9,8 +9,8 @@
         "flixel"
 	],
 	"description": "Loads SVG files as a FlxSprite",
-	"version": "1.0.0",
-	"releasenote": "Initial Release",
+	"version": "1.0.1",
+	"releasenote": "Fix resizing",
 	"contributors": [
 		"Vortex"
 	],
