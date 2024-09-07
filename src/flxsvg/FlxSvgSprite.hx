@@ -1,59 +1,96 @@
 package flxsvg;
 
-import flixel.FlxSprite;
+import flixel.system.FlxAssets;
 import flixel.util.FlxColor;
 import flixel.FlxG;
-import format.SVG;
+import flixel.FlxSprite;
+import format.svg.SVGData;
 import format.svg.SVGRenderer;
-import openfl.display.BitmapData;
+import openfl.geom.Matrix;
 import openfl.display.Shape;
-import openfl.utils.Assets;
 
-/**
- * A ```FlxSprite``` meant for loading SVG files via OpenFL's SVG rendering library.
- * @author Vortex
- */
-class FlxSvgSprite extends FlxSprite {
-	private var _svg:SVG;
-	private var _shape:Shape;
+class FlxSvgSprite extends FlxSprite
+{
+	public var svgWidth(default, set):Float = 0;
+	public var svgHeight(default, set):Float = 0;
 
-	/**
-	 * The raw SVG data as a string.
-	 */
-	public var data(default, null):String;
+	@:noCompletion
+	private var svgData:SVGData;
 
-	/**
-	 * Creats a new ```FlxSvgSprite```
-	 * @param data The SVG data as a string.
-	 * @param X The X position.
-	 * @param Y The Y position.
-	 */
-	public function new(data:String, X:Float = 0, Y:Float = 0) {
-		super(X, Y);
-		this.data = data;
-		render(data);
+	@:noCompletion
+	private var svgDirty:Bool = false;
+
+	public function new(x:Float = 0, y:Float = 0):Void
+	{
+		super(x, y);
 	}
 
-	/**
-	 * Renders a SVG graphic to an FlxSprite
-	 * @param data The raw SVG data as a string.
-	 * Thanks to MAJigsaw for the code speedup!
-	 */
-	 public function render(data:String) {
-		// Protection for loading an invalid SVG file.
-        if (data == '' || (Xml.parse(data).firstElement()?.nodeName != "svg" && Xml.parse(data).firstElement()?.nodeName != "svg:svg")) {
-            FlxG.log.error("Not an SVG file ("+ (data == '' ? "null" : Xml.parse(data).firstElement()?.nodeName) + ")");
-            loadGraphic("flixel/images/logo/default.png");
-            return;
-        }
+	public override function draw():Void
+	{
+		if (svgDirty)
+		{
+			final diffX:Int = Math.floor(svgWidth) - pixels.width;
+			final diffY:Int = Math.floor(svgHeight) - pixels.height;
 
-        _shape = new Shape();
-        _svg = new SVG(data);
-        _svg.render(_shape.graphics);
+			if (diffX != 0 || diffY != 0)
+				makeGraphic(Math.floor(svgWidth), Math.floor(svgHeight), FlxColor.TRANSPARENT, true);
+			else
+				pixels.fillRect(pixels.rect, FlxColor.TRANSPARENT);
 
-		// Draws the Graphic to the sprite.
-        final renderer:SVGRenderer = new SVGRenderer(_svg.data);
-        makeGraphic(Std.int(renderer.width), Std.int(renderer.height), FlxColor.TRANSPARENT);
-        pixels.draw(_shape);
-    }
+			final matrix:Matrix = new Matrix();
+
+			matrix.identity();
+
+			if (shapeWidth > 0 && shapeHeight > 0)			
+				matrix.scale(Math.floor(svgWidth) / svgData.width, Math.floor(svgHeight) / svgData.height);
+
+			final shape:Shape = new Shape();
+
+			new SVGRenderer(svgData).render(shape.graphics, matrix);
+
+			pixels.draw(shape);
+
+			svgDirty = false;
+		}
+
+		super.draw();
+	}
+
+	public function loadSvg(svgData:FlxXmlAsset, ?svgWidth:Float, ?svgHeight:Float):FlxSvgSprite
+	{
+		if (xml != null)
+		{
+			final xmlData:Xml = xml.getXml();
+
+			if (xmlData.firstElement()?.nodeName != "svg" && xmlData.firstElement()?.nodeName != "svg:svg")
+				return this;
+
+			svgData = new SVGData(xmlData);
+
+			this.svgWidth = svgWidth > 0 ? svgWidth : svgData.width;
+			this.svgHeight = svgHeight > 0 ? svgHeight : svgData.height;
+		}
+
+		return this;
+	}
+
+	@:noCompletion
+	private function set_svgWidth(value:Float):Float
+	{
+		svgWidth = value;
+
+		svgDirty = true;
+
+		return svgWidth;
+	}
+
+	@:noCompletion
+	private function set_svgHeight(value:Float):Float
+	{
+		svgHeight = value;
+
+		svgDirty = true;
+
+		return svgHeight;
+	}
 }
