@@ -79,7 +79,8 @@ class FlxSvgSprite extends FlxSprite
 	{
 		svgWidth = value;
 
-		svgDirty = true;
+		if (svgData != null)
+			svgDirty = true;
 
 		return svgWidth;
 	}
@@ -89,7 +90,8 @@ class FlxSvgSprite extends FlxSprite
 	{
 		svgHeight = value;
 
-		svgDirty = true;
+		if (svgData != null)
+			svgDirty = true;
 
 		return svgHeight;
 	}
