@@ -16,7 +16,6 @@ import openfl.utils.Assets;
 class FlxSvgSprite extends FlxSprite {
 	private var _svg:SVG;
 	private var _shape:Shape;
-	private var _bitmapData:BitmapData;
 
 	/**
 	 * The raw SVG data as a string.
@@ -37,24 +36,24 @@ class FlxSvgSprite extends FlxSprite {
 
 	/**
 	 * Renders a SVG graphic to an FlxSprite
-	 * @param data 
+	 * @param data The raw SVG data as a string.
+	 * Thanks to MAJigsaw for the code speedup!
 	 */
-	public function render(data:String) {
+	 public function render(data:String) {
+		// Protection for loading an invalid SVG file.
         if (data == '' || (Xml.parse(data).firstElement()?.nodeName != "svg" && Xml.parse(data).firstElement()?.nodeName != "svg:svg")) {
             FlxG.log.error("Not an SVG file ("+ (data == '' ? "null" : Xml.parse(data).firstElement()?.nodeName) + ")");
             loadGraphic("flixel/images/logo/default.png");
             return;
         }
-		_shape = new Shape();
-		_svg = new SVG(data);
-		_svg.render(_shape.graphics);
 
-		var renderer:SVGRenderer = new SVGRenderer(_svg.data);
+        _shape = new Shape();
+        _svg = new SVG(data);
+        _svg.render(_shape.graphics);
 
-		_bitmapData = new BitmapData(Std.int(renderer.width), Std.int(renderer.height), true, FlxColor.TRANSPARENT);
-		_bitmapData.draw(_shape);
-
-		loadGraphic(_bitmapData);
-		updateHitbox();
-	}
+		// Draws the Graphic to the sprite.
+        final renderer:SVGRenderer = new SVGRenderer(_svg.data);
+        makeGraphic(Std.int(renderer.width), Std.int(renderer.height), FlxColor.TRANSPARENT);
+        pixels.draw(_shape);
+    }
 }
