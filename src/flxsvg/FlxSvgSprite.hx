@@ -58,15 +58,14 @@ class FlxSvgSprite extends FlxSprite
 
 	public function loadSvg(svgData:FlxXmlAsset, ?svgWidth:Float, ?svgHeight:Float):FlxSvgSprite
 	{
-		if (xml != null)
+		if (svgData != null)
 		{
-			final xmlData:Xml = xml.getXml();
+			final xmlData:Xml = svgData.getXml();
 
 			if (xmlData.firstElement()?.nodeName != "svg" && xmlData.firstElement()?.nodeName != "svg:svg")
 				return this;
 
-			svgData = new SVGData(xmlData);
-
+			this.svgData = new SVGData(xmlData);
 			this.svgWidth = svgWidth > 0 ? svgWidth : svgData.width;
 			this.svgHeight = svgHeight > 0 ? svgHeight : svgData.height;
 		}
