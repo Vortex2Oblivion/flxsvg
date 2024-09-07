@@ -50,6 +50,8 @@ class FlxSvgSprite extends FlxSprite
 
 			pixels.draw(shape);
 
+			dirty = true;
+
 			svgDirty = false;
 		}
 
@@ -66,8 +68,8 @@ class FlxSvgSprite extends FlxSprite
 				return this;
 
 			this.svgData = new SVGData(xmlData);
-			this.svgWidth = svgWidth > 0 ? svgWidth : svgData.width;
-			this.svgHeight = svgHeight > 0 ? svgHeight : svgData.height;
+			this.svgWidth = svgWidth > 0 ? svgWidth : this.svgData.width;
+			this.svgHeight = svgHeight > 0 ? svgHeight : this.svgData.height;
 		}
 
 		return this;
