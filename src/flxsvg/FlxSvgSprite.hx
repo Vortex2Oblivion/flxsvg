@@ -67,7 +67,7 @@ class FlxSvgSprite extends FlxSprite
 		{
 			final xmlData:Xml = svgData.getXml();
 
-			if (xmlData.firstElement() ? .nodeName != "svg" && xmlData.firstElement() ? .nodeName != "svg:svg")
+			if (xmlData.firstElement()?.nodeName != "svg" && xmlData.firstElement()?.nodeName != "svg:svg")
 				return this;
 
 			this.svgData = new SVGData(xmlData);
