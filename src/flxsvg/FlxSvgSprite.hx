@@ -29,28 +29,31 @@ class FlxSvgSprite extends FlxSprite
 	{
 		if (svgDirty)
 		{
-			final diffX:Int = Math.floor(svgWidth) - pixels.width;
-			final diffY:Int = Math.floor(svgHeight) - pixels.height;
+			if (svgData != null)
+			{
+				final diffX:Int = Math.floor(svgWidth) - pixels.width;
+				final diffY:Int = Math.floor(svgHeight) - pixels.height;
 
-			if (diffX != 0 || diffY != 0)
-				makeGraphic(Math.floor(svgWidth), Math.floor(svgHeight), FlxColor.TRANSPARENT, true);
-			else
-				pixels.fillRect(pixels.rect, FlxColor.TRANSPARENT);
+				if (diffX != 0 || diffY != 0)
+					makeGraphic(Math.floor(svgWidth), Math.floor(svgHeight), FlxColor.TRANSPARENT, true);
+				else
+					pixels.fillRect(pixels.rect, FlxColor.TRANSPARENT);
 
-			final matrix:Matrix = new Matrix();
+				final matrix:Matrix = new Matrix();
 
-			matrix.identity();
+				matrix.identity();
 
-			if (svgWidth > 0 && svgHeight > 0)			
-				matrix.scale(Math.floor(svgWidth) / svgData.width, Math.floor(svgHeight) / svgData.height);
+				if (svgWidth > 0 && svgHeight > 0)
+					matrix.scale(Math.floor(svgWidth) / svgData.width, Math.floor(svgHeight) / svgData.height);
 
-			final shape:Shape = new Shape();
+				final shape:Shape = new Shape();
 
-			new SVGRenderer(svgData).render(shape.graphics, matrix);
+				new SVGRenderer(svgData).render(shape.graphics, matrix);
 
-			pixels.draw(shape);
+				pixels.draw(shape);
 
-			dirty = true;
+				dirty = true;
+			}
 
 			svgDirty = false;
 		}
@@ -64,12 +67,15 @@ class FlxSvgSprite extends FlxSprite
 		{
 			final xmlData:Xml = svgData.getXml();
 
-			if (xmlData.firstElement()?.nodeName != "svg" && xmlData.firstElement()?.nodeName != "svg:svg")
+			if (xmlData.firstElement() ? .nodeName != "svg" && xmlData.firstElement() ? .nodeName != "svg:svg")
 				return this;
 
 			this.svgData = new SVGData(xmlData);
+
 			this.svgWidth = svgWidth > 0 ? svgWidth : this.svgData.width;
 			this.svgHeight = svgHeight > 0 ? svgHeight : this.svgData.height;
+
+			makeGraphic(Math.floor(this.svgWidth), Math.floor(this.svgHeight), FlxColor.TRANSPARENT, true);
 		}
 
 		return this;
