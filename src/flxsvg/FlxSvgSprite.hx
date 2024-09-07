@@ -41,7 +41,7 @@ class FlxSvgSprite extends FlxSprite
 
 			matrix.identity();
 
-			if (shapeWidth > 0 && shapeHeight > 0)			
+			if (svgWidth > 0 && svgHeight > 0)			
 				matrix.scale(Math.floor(svgWidth) / svgData.width, Math.floor(svgHeight) / svgData.height);
 
 			final shape:Shape = new Shape();
