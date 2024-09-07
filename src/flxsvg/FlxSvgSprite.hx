@@ -108,7 +108,10 @@ class FlxSvgSprite extends FlxSprite
 			final xmlData:Xml = svgData.getXml();
 
 			if (xmlData.firstElement()?.nodeName != 'svg' && xmlData.firstElement()?.nodeName != 'svg:svg')
+			{
+				FlxG.log.error('Not an SVG file (${xmlData.firstElement()?.nodeName})');
 				return this;
+			}
 
 			this.svgData = new SVGData(xmlData);
 			this.svgWidth = svgWidth > 0 ? svgWidth : this.svgData.width;
@@ -116,6 +119,8 @@ class FlxSvgSprite extends FlxSprite
 
 			makeGraphic(Math.floor(this.svgWidth), Math.floor(this.svgHeight), FlxColor.TRANSPARENT, true);
 		}
+		else
+			FlxG.log.error('No SVG data provided');
 
 		return this;
 	}
