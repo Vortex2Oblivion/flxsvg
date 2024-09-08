@@ -55,7 +55,7 @@ class FlxSvgSprite extends FlxSprite
 	{
 		if (svgDirty)
 		{
-			if (svgData != null)
+			if (svgData != null && pixels != null)
 			{
 				final diffX:Int = Math.floor(svgWidth) - pixels.width;
 				final diffY:Int = Math.floor(svgHeight) - pixels.height;
