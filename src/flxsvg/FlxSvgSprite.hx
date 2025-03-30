@@ -1,12 +1,14 @@
 package flxsvg;
 
-import flixel.system.FlxAssets;
-import flixel.util.FlxColor;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxFrame;
+import flixel.math.FlxMatrix;
+import flixel.system.FlxAssets;
+import flixel.util.FlxColor;
 import format.svg.SVGData;
 import format.svg.SVGRenderer;
-import openfl.geom.Matrix;
 import openfl.display.Shape;
 
 /**
@@ -17,23 +19,12 @@ import openfl.display.Shape;
  * @author Vortex2Oblivion
  * @author Mihai Alexandru (MAJigsaw77)
  */
-class FlxSvgSprite extends FlxSprite
-{
-	/**
-	 * The width of the SVG content to be rendered.
-	 */
-	public var svgWidth(default, set):Float = 0;
-
-	/**
-	 * The height of the SVG content to be rendered.
-	 */
-	public var svgHeight(default, set):Float = 0;
-
+class FlxSvgSprite extends FlxSprite {
 	/**
 	 * Private storage for the parsed SVG data.
 	 */
 	@:noCompletion
-	private var svgData:SVGData;
+	private var svgData(default, set):SVGData;
 
 	/**
 	 * A flag indicating whether the sprite needs to be redrawn (if the SVG content, dimensions or antialiasing have changed).
@@ -41,42 +32,45 @@ class FlxSvgSprite extends FlxSprite
 	@:noCompletion
 	private var svgDirty:Bool = false;
 
+	@:noCompletion
+	private var renderer:SVGRenderer;
+
+	@:noCompletion
+	private final matrix:FlxMatrix = new FlxMatrix();
+
+	@:noCompletion
+	private final shape:Shape = new Shape();
+
 	/**
 	 * Creates a `FlxSvgSprite` at a specified position.
 	 * @param x The initial X position of the sprite.
 	 * @param y The initial Y position of the sprite.
 	 */
-	public function new(?x:Float = 0, ?y:Float = 0):Void
-	{
+	public function new(?x:Float = 0, ?y:Float = 0):Void {
 		super(x, y);
 	}
 
-	public override function draw():Void
-	{
-		if (svgDirty)
-		{
-			if (svgData != null && pixels != null)
-			{
-				final diffX:Int = Math.floor(svgWidth) - pixels.width;
-				final diffY:Int = Math.floor(svgHeight) - pixels.height;
+	public override function draw():Void {
+		if (svgDirty) {
+			if (svgData != null && pixels != null) {
+				final diffX:Int = Math.floor(width) - pixels.width;
+				final diffY:Int = Math.floor(height) - pixels.height;
 
 				if (diffX != 0 || diffY != 0)
-					makeGraphic(Math.floor(svgWidth), Math.floor(svgHeight), FlxColor.TRANSPARENT, true);
+					makeGraphic(Math.floor(width), Math.floor(height), FlxColor.TRANSPARENT, true);
 				else
 					pixels.fillRect(pixels.rect, FlxColor.TRANSPARENT);
 
-				final matrix:Matrix = new Matrix();
-
 				matrix.identity();
 
-				if (svgWidth > 0 && svgHeight > 0)
-					matrix.scale(Math.floor(svgWidth) / svgData.width, Math.floor(svgHeight) / svgData.height);
+				if (width > 0 && height > 0)
+					matrix.scale(Math.floor(width) / svgData.width, Math.floor(height) / svgData.height);
 
-				final shape:Shape = new Shape();
-
-				new SVGRenderer(svgData).render(shape.graphics, matrix);
+				renderer.render(shape.graphics, matrix);
 
 				pixels.draw(shape, antialiasing);
+
+				shape.graphics.clear();
 
 				dirty = true;
 			}
@@ -87,69 +81,76 @@ class FlxSvgSprite extends FlxSprite
 		super.draw();
 	}
 
-	public override function destroy():Void
-	{
+	public override function destroy():Void {
 		super.destroy();
-
 		svgData = null;
 	}
 
 	/**
 	 * Loads an SVG from a `FlxXmlAsset` and optionally sets its width and height.
 	 * @param svgData The `FlxXmlAsset` containing the SVG data.
-	 * @param svgWidth (Optional) The width to render the SVG. Defaults to the intrinsic width of the SVG.
-	 * @param svgHeight (Optional) The height to render the SVG. Defaults to the intrinsic height of the SVG.
+	 * @param width (Optional) The width to render the SVG. Defaults to the intrinsic width of the SVG.
+	 * @param height (Optional) The height to render the SVG. Defaults to the intrinsic height of the SVG.
 	 * @return This instance, to allow for method chaining.
 	 */
-	public function loadSvg(svgData:FlxXmlAsset, ?svgWidth:Float, ?svgHeight:Float):FlxSvgSprite
-	{
-		if (svgData != null)
-		{
+	public function loadSvg(svgData:FlxXmlAsset, ?width:Float, ?height:Float):FlxSvgSprite {
+		if (svgData != null) {
 			final xmlData:Xml = svgData.getXml();
 
-			if (xmlData.firstElement()?.nodeName != 'svg' && xmlData.firstElement()?.nodeName != 'svg:svg')
-			{
+			if (xmlData.firstElement()?.nodeName != 'svg' && xmlData.firstElement()?.nodeName != 'svg:svg') {
 				FlxG.log.error('Not an SVG file (${xmlData.firstElement()?.nodeName})');
 				return this;
 			}
 
 			this.svgData = new SVGData(xmlData);
-			this.svgWidth = svgWidth > 0 ? svgWidth : this.svgData.width;
-			this.svgHeight = svgHeight > 0 ? svgHeight : this.svgData.height;
+			this.width = width > 0 ? width : this.svgData.width;
+			this.height = height > 0 ? height : this.svgData.height;
 
-			makeGraphic(Math.floor(this.svgWidth), Math.floor(this.svgHeight), FlxColor.TRANSPARENT, true);
-		}
-		else
+			makeGraphic(Math.floor(this.width), Math.floor(this.height), FlxColor.TRANSPARENT, true);
+		} else
 			FlxG.log.error('No SVG data provided');
 
 		return this;
 	}
+	
+	@:noCompletion
+	private inline function set_svgData(data:SVGData):SVGData {
+		renderer = new SVGRenderer(data);
+		return this.svgData = data;
+	}
 
 	@:noCompletion
-	private function set_svgWidth(value:Float):Float
-	{
-		svgWidth = value;
+	override private function get_width() {
+		return  svgData != null ? svgData.width : super.get_width();
+	}
+
+	@:noCompletion
+	override private function get_height() {
+		return svgData != null ? svgData.height : super.get_height();
+	}
+
+	@:noCompletion
+	override private function set_width(value:Float):Float {
+		width = value;
 
 		if (svgData != null)
 			svgDirty = true;
 
-		return svgWidth;
+		return width;
 	}
 
 	@:noCompletion
-	private function set_svgHeight(value:Float):Float
-	{
-		svgHeight = value;
+	override private function set_height(value:Float):Float {
+		height = value;
 
 		if (svgData != null)
 			svgDirty = true;
 
-		return svgHeight;
+		return height;
 	}
 
 	@:noCompletion
-	private override function set_antialiasing(value:Bool):Bool
-	{
+	private override function set_antialiasing(value:Bool):Bool {
 		antialiasing = value;
 
 		if (svgData != null)

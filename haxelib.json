@@ -9,8 +9,8 @@
         "flixel"
 	],
 	"description": "Loads SVG files as a FlxSprite",
-	"version": "1.0.3",
-	"releasenote": "Optimized loading SVG files",
+	"version": "1.1.0",
+	"releasenote": "SVGs now maintain quality when resied. Optimizations. Backend changes.",
 	"contributors": [
 		"Vortex"
 	],

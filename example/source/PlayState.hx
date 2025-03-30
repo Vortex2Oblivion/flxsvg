@@ -15,7 +15,8 @@ class PlayState extends FlxState
 	{
 		super.create();
 		bgColor = FlxColor.WHITE;
-		svg = new FlxSvgSprite(Assets.getText("assets/images/HaxeFlixel.svg"));
+		svg = new FlxSvgSprite().loadSvg(Assets.getText("assets/images/haxe.svg"));
+		svg.antialiasing = true;
 		svg.screenCenter();
 		add(svg);
 	}
