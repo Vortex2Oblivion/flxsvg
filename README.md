@@ -33,7 +33,8 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		super.create();
-		svg = new FlxSvgSprite(Assets.getText("assets/images/HaxeFlixel.svg"));
+		svg = new FlxSvgSprite();
+		svg.loadSvg(Assets.getText("assets/images/HaxeFlixel.svg"));
 		add(svg);
 	}
 }
